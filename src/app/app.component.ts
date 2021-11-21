@@ -2,7 +2,7 @@ import { Component, VERSION } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { from, of } from 'rxjs';
 import {
-    catchError,
+  catchError,
   concatMap,
   flatMap,
   map,
@@ -38075,14 +38075,16 @@ export class AppComponent {
     from(crypto_list)
       .pipe(
         // take(20),
-        tap((item) => console.log(`coin ${item.name} has come`)),
-        mergeMap((item) => {
+        // tap((item) => console.log(`coin ${item.name} has come`)),
+        concatMap((item) => {
           return this.httpClient
             .get(
               `https://api.coinmarketcap.com/data-api/v3/cryptocurrency/historical?id=${item.id}&convertId=2781&timeStart=1635292800&timeEnd=1635379200`
             )
             .pipe(
-              catchError(err => of({data:{name:'',id:'', symbol:'',quotes:[]}})),
+              catchError((err) =>
+                of({ data: { name: '', id: '', symbol: '', quotes: [] } })
+              ),
               map((item: any) => {
                 return {
                   name: item.data.name,
@@ -38092,14 +38094,19 @@ export class AppComponent {
                 };
               })
             );
-        }),
-        takeWhile((ev: any) => {
-          if (ev.cap > 0 && ev.cap > 20) return true;
-          if (ev.cap < 0 && ev.cap < -20) return true;
         })
+        // takeWhile((ev: any) => {
+        //   if (ev.cap > 0 && ev.cap > 20) return true;
+        //   if (ev.cap < 0 && ev.cap < -20) return true;
+        // })
       )
-      .subscribe((data) => {
-        this.displayList.push(data);
+      .subscribe((data: any) => {
+        if (
+          (data.cap < 0 && data.cap < -20) ||
+          (data.cap > 0 && data.cap > 20)
+        ) {
+          this.displayList.push(data);
+        }
       });
   }
 
