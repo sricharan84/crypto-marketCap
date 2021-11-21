@@ -1,4 +1,26 @@
-<hello name="{{ name }}"></hello>
 <p>
+  {{ name }}
   Start editing to see some magic happen :)
 </p>
+
+<button (click)="getHistory()">get History</button>
+total item displaying are : {{ displayList.length }}
+<table>
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Symbol</th>
+      <th scope="col">Markt Cap</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of displayList">
+      <td>{{ item.id }}</td>
+      <td>{{ item.name }}</td>
+      <td>{{ item.symbol }}</td>
+      <td>{{ item.cap }} %</td>
+    </tr>
+  </tbody>
+</table>
+<div></div>
